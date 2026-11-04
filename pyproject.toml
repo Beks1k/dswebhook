@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dswebhook"
+version = "0.2.2"
+description = "Lib for easy use of discord webhook"
+requires-python = ">=3.8"
+authors = [
+    { name = "Beks1k"}
+]
+dependencies = [
+    "requests>=2.28.0",
+]
+
+[tool.setuptools]
+# Указываем setuptools искать пакеты строго внутри директории src
+package-dir = {"" = "src"}
