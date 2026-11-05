@@ -32,24 +32,24 @@ Dispatches a payload string to the webhook registered under the specified `ids`.
 ## Usage Example
 
 ```python
-import your_webhook_module as webhook
+import dswebhook as dsw
 
-# 1. Initialize webhooks with IDs
-webhook.init("https://discord.com...", id=1)
-webhook.init("https://discord.com...", id="backup_channel")
+# 1. Initialize dswebhook with ID 
+
+dsw.init("https://discord.com...", id=1)dsw.init("https://discord.com...", "id="backup_channel")
 
 # 2. Send logs with debugging features enabled
 try:
     # Sends a message and prints out status code and server raw response text
-    webhook.send("System updated successfully!", ids=1, statCode=True, flush=True)
+dsw.send("System updated successfully!", ids=1, statCode=True, flush=True)
 
     # Sends a message to the second text channel using a string ID
-    webhook.send("Alert triggered.", ids="backup_channel")
+dsw.send("Alert triggered.", ids="backup_channel")
 
-except webhook.AlreadyExists as e:
+except dsw.AlreadyExists as e:
     print(f"Configuration conflict: {e}")
-except webhook.NoSuchID as e:
+except dsw.NoSuchID as e:
     print(f"Targeting error: {e}")
-except webhook.HTTPError as e:
+except dsw.HTTPError as e:
     print(f"Server communication failed: {e}")
 ```
