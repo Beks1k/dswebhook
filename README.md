@@ -2,9 +2,8 @@
 
 A minimal and efficient Python wrapper for managing and sending messages to multiple webhooks simultaneously using numeric or string IDs. It includes built-in safeguards, response flashing, and clean custom error descriptions.
 
-## Custom Exceptions
+## Exceptions
 
-The module imports custom exceptions from an external `exceptions` file:
 
 - **`InvalidURL`**: Raised if the URL string is empty or missing.
 - **`AlreadyExists`**: Raised if you try to register a URL on an ID that is already taken.
@@ -15,6 +14,7 @@ The module imports custom exceptions from an external `exceptions` file:
 - **`BadRequest`**: Server returned an explicit HTTP `400` error.
 - **`InternalServerError`**: Server encountered a critical HTTP `500` error.
 - **`HTTPError`**: Triggers for any other non-2xx server responses.
+- **`NotJSON`**: Triggers if given value isnt JSON
 
 ## Core Functions
 
@@ -28,6 +28,7 @@ Dispatches a payload string to the webhook registered under the specified `ids`.
 - **`ids`**: The target webhook identifier.
 - **`statCode`**: If set to `True`, prints the server response status code in the console.
 - **`flush`**: If set to `True`, prints the raw text/JSON response returned from the server endpoint.
+- **`customJSON`**: Must be a variable dictionary, sends custom JSON request for custom url
 
 ## Usage Example
 
@@ -36,12 +37,45 @@ import dswebhook as dsw
 
 # 1. Initialize dswebhook with ID 
 
-dsw.init("https://discord.com...", id=1)dsw.init("https://discord.com...", "id="backup_channel")
+dsw.init("https://discord.com...", id=1)
+dsw.init("https://discord.com...", id="backup_channel")
 
 # 2. Send logs with debugging features enabled
 try:
     # Sends a message and prints out status code and server raw response text
 dsw.send("System updated successfully!", ids=1, statCode=True, flush=True)
+
+    # Sends a message to the second text channel using a string ID
+dsw.send("Alert triggered.", ids="backup_channel")
+
+except dsw.AlreadyExists as e:
+    print(f"Configuration conflict: {e}")
+except dsw.NoSuchID as e:
+    print(f"Targeting error: {e}")
+except dsw.HTTPError as e:
+    print(f"Server communication failed: {e}")
+```
+
+### Usage example for custom JSON request
+
+```python
+import dswebhook as dsw
+
+# 1. Initialize dswebhook with ID 
+
+customData = {
+    "auth":"User"
+    "token":"token"
+    ...
+}
+
+dsw.init("https://your-custom-URL...", id=1)
+dsw.init("https://your-custom-URL...", id="backup_channel")
+
+# 2. Send logs with debugging features enabled
+try:
+    # Sends a message with custom JSON and prints out status code and server raw response text
+dsw.send("System updated successfully!", ids=1, statCode=True, flush=True, customJSON=customData )
 
     # Sends a message to the second text channel using a string ID
 dsw.send("Alert triggered.", ids="backup_channel")

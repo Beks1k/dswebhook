@@ -33,3 +33,19 @@ class AlreadyExists(Exception):
 class HTTPError(Exception):
     '''When other HTTP error accures'''
     pass
+
+class TimeOut(Exception):
+    '''Unexpected Error form requests'''
+    pass
+
+class UnexpectedError(Exception):
+    '''Unexpected Error form requests'''
+    pass
+
+class CantBeEmpty(Exception):
+    '''If content is empty'''
+    pass
+
+class LimitReached(Exception):
+    '''When webhooks limit are reached'''
+    pass
