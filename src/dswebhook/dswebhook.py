@@ -1,5 +1,5 @@
 import requests
-from expections import(
+from exceptions import(
     BadRequest, InternalServerError, InvalidURL, ContentTooLarge, ConnectionError, 
     SchemaError, NoSuchID, AlreadyExists, HTTPError, TimeOut, UnexpectedError, 
     LimitReached, CantBeEmpty
