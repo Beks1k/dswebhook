@@ -5,12 +5,20 @@ on:
     types: [published]
 
 jobs:
-  build-and-attest:
+  build-and-release:
+    name: Build, Attest and Publish to PyPI
     runs-on: ubuntu-latest
+    
+    # Добавляем окружение, как просит документация PyPI
+    environment:
+      name: pypi
+      url: https://pypi.org/project/dswebhook
+
     permissions:
-      id-token: write      
-      contents: write      
-      attestations: write  
+      id-token: write      # КРИТИЧЕСКИ ВАЖНО: для Trusted Publishing и Provenance подписи
+      contents: write      # Разрешение на загрузку файлов в релиз GitHub
+      attestations: write  # Разрешение на генерацию аттестации SLSA
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -20,21 +28,22 @@ jobs:
         with:
           python-version: '3.11'
 
-
+      # Шаг сборки пакетов
       - name: Install build dependencies
         run: |
           python -m pip install --upgrade pip
           pip install build
 
-
       - name: Build package distributions
         run: python -m build
 
+      # Шаг криптографической подписи (Provenance)
       - name: Generate Build Attestation
         uses: actions/attest-build-provenance@v1
         with:
           subject-path: 'dist/*'
 
+      # Шаг сохранения файлов на самом Гитхабе
       - name: Upload artifacts to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -42,5 +51,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      # Легитный шаг публикации на PyPI (с правильным именем gh-action-pypi-publish)
       - name: Publish package distributions to PyPI
-        uses: pypa/github-action-pypi-publish@release/v1.12
+        uses: pypa/gh-action-pypi-publish@release/v1
