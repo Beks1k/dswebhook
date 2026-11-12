@@ -49,3 +49,7 @@ class CantBeEmpty(Exception):
 class LimitReached(Exception):
     '''When webhooks limit are reached'''
     pass
+
+class EmptyID(Exception):
+    '''When ID is empty'''
+    pass
